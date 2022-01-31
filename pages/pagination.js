@@ -4,6 +4,10 @@ import cloneDeep from "lodash/cloneDeep";
 import Body from './body';
 import Pagination from "rc-pagination";
 import "rc-pagination/assets/index.css";
+import { Loading } from '@nextui-org/react';
+import { Text } from '@nextui-org/react';
+
+
 
 
 
@@ -12,27 +16,30 @@ const pagination = () => {
 
 const [dataList, setDataList] = useState([]);
 const countPerPage = 10;
-  const [value, setValue] = React.useState("");
-  const [currentPage, setCurrentPage] = React.useState(1);
-  const [collection, setCollection] = React.useState(
+const [loading, setloading] = React.useState(true);
+const [currentPage, setCurrentPage] = React.useState(1);
+const collectionData = cloneDeep(dataList.slice(0, countPerPage));
+const [collection, setCollection] = React.useState(
     cloneDeep(dataList.slice(0, countPerPage))
   );
 
 
-useEffect(() => {
+
     const fetchPosts = async () => {
       const res = await axios.get("https://jsonplaceholder.typicode.com/posts");
       setDataList(res.data);
+      setloading(false);
+      
+      
       
     };
 
-    fetchPosts();
+    useEffect(() => {
+      fetchPosts();
+    }, []);
     
     
     
-    
-  }, []);
-
 
 
   const updatePage = p => {
@@ -40,6 +47,7 @@ useEffect(() => {
     const to = countPerPage * p;
     const from = to - countPerPage;
     setCollection(cloneDeep(dataList.slice(from, to)));
+    console.log('callling  update method');
   };
 
 
@@ -50,9 +58,24 @@ useEffect(() => {
   return (
     <>
     <div className="App">
-      <h2>The JSON below is loaded from an external API!</h2>
+      <Text
+      h1
+      size={60}
+      css={{
+        textGradient: '45deg, $purple500 -20%, $pink500 100%'
+      }}
+      weight="bold"
+    >
+      Make the next.js pagination with data from axios by using react hooks
+    </Text>
+      {loading ? (<Loading size="xl"/>) :(
+        <Body posts={collection} />
+      )
+      
+      
+      }
 
-      <Body posts={collection} />
+      
       {/* <Pagination rounded shadow size={countPerPage} initialPage={1} total={dataList.length} page={currentPage} onChange={updatePage} /> */}
       <Pagination
         pageSize={countPerPage}
