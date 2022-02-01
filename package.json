@@ -9,8 +9,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "start": "next start -p $PORT",
+    "heroku-postbuild":"npm run build"
   },
   "dependencies": {
     "@nextui-org/react": "^1.0.2-beta.3",
